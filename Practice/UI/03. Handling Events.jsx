@@ -57,3 +57,7 @@ checkbox.onClick = function () {
 dropdown.onChange = function () {
   alert("Selected: " + dropdown.selection.text);
 };
+
+input.onChange = function () {
+  alert("Input value: " + input.text);
+};
