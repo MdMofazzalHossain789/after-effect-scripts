@@ -1,5 +1,3 @@
-var comp = app.project.activeItem;
-
 function findLayer(name) {
   for (var i = 1; i <= comp.numLayers; i++) {
     var l = comp.layer(i);
@@ -8,49 +6,64 @@ function findLayer(name) {
   return null;
 }
 
-if (!comp || !(comp instanceof CompItem)) {
-  alert("Select a composition first");
-} else {
-  var layer = findLayer("Color");
-  // Old and new layer names
+function renameLayers() {
+  var comp = app.project.activeItem;
 
-  // Find the layer
-  if (!layer) {
-    alert("Layer '" + oldName + "' not found!");
+  if (!comp || !(comp instanceof CompItem)) {
+    alert("Select a composition first");
   } else {
-    // Rename the layer
-    var oldName = layer.name;
-    var newName = "Color " + comp.name;
+    app.beginUndoGroup("Rename Layers");
 
-    layer.name = newName;
+    var layer = findLayer("Character ");
 
-    // Loop through all layers in the comp
-    for (var i = 1; i <= comp.numLayers; i++) {
-      var l = comp.layer(i);
-
-      // Recursively check all properties of the layer
-      function updateExpressions(propGroup) {
-        for (var j = 1; j <= propGroup.numProperties; j++) {
-          var prop = propGroup.property(j);
-
-          // If the property has an expression, replace old layer name with new
-          if (prop.expression) {
-            prop.expression = prop.expression.replace(
-              new RegExp(oldName, "g"),
-              newName
-            );
-          }
-
-          // If the property has sub-properties (like groups), recurse
-          if (prop.numProperties && prop.numProperties > 0) {
-            updateExpressions(prop);
-          }
-        }
-      }
-
-      updateExpressions(l);
+    if (layer) {
+      layer.name = comp.name + " Null";
     }
 
-    alert("Layer renamed and expressions updated!");
+    layer = findLayer("Color");
+    // Old and new layer names
+
+    // Find the layer
+    if (!layer) {
+      alert("Layer '" + oldName + "' not found!");
+    } else {
+      // Rename the layer
+      var oldName = layer.name;
+      var newName = "Color " + comp.name;
+
+      layer.name = newName;
+
+      // Loop through all layers in the comp
+      for (var i = 1; i <= comp.numLayers; i++) {
+        var l = comp.layer(i);
+
+        // Recursively check all properties of the layer
+        function updateExpressions(propGroup) {
+          for (var j = 1; j <= propGroup.numProperties; j++) {
+            var prop = propGroup.property(j);
+
+            // If the property has an expression, replace old layer name with new
+            if (prop.expression) {
+              prop.expression = prop.expression.replace(
+                new RegExp(oldName, "g"),
+                newName
+              );
+            }
+
+            // If the property has sub-properties (like groups), recurse
+            if (prop.numProperties && prop.numProperties > 0) {
+              updateExpressions(prop);
+            }
+          }
+        }
+
+        updateExpressions(l);
+      }
+
+      // alert("Layer renamed and expressions updated!");
+    }
+    app.endUndoGroup();
   }
 }
+
+renameLayers();
