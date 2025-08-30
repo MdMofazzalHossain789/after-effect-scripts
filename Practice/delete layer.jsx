@@ -11,18 +11,7 @@ if (comp == null || !(comp instanceof CompItem)) {
     // Start an undo group for the operation
     app.beginUndoGroup("Create Shape from Vector Layer");
 
-    // Loop through selected layers
-    for (var i = 0; i < selectedLayers.length; i++) {
-      var layer = selectedLayers[i];
-      // Check if the layer is a footage layer (e.g., Illustrator file)
-      if (layer.source instanceof FootageItem) {
-        // Execute the command to create shapes from vector layer
-        app.executeCommand(
-          app.findMenuCommandId("Create Shapes from Vector Layer")
-        );
-      }
-    }
-
+    selectedLayers[0].remove();
     // End the undo group
     app.endUndoGroup();
   }
