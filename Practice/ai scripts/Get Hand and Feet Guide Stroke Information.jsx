@@ -119,7 +119,7 @@ function saveImage(layerToExport, ext, object) {
     } else {
         // Windows
         path = "C:/Windows/Temp/";
-    }
+}
   
   object.image = path + "Selection_" + ext + ".png";
   var file = new File(object.image);
